@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<declaration>
+<!-- généré par la va11ydette -->
+
+<!--
+ TITLE
+ This is the name for the site, or page, or section of a site that was audited
+ -->
+ <title><![CDATA[Application test]]></title>
+
+<!--
+LANGUAGE
+This declaration was done in this language:
+(please use proper HTML lang attribute)
+-->
+<lang>FR</lang>
+
+<!-- 
+STATUS
+Either being audited or having been audited
+So:
+[WIP|DONE]
+-->
+<status>done</status>
+
+<!--
+
+ below this line will not be read if we're WIP, so don't bother filling it up
+-->
+
+<!--
+******************************************************
+GENERAL DECLARATION INFORMATION
+******************************************************
+-->
+
+<!--
+AUDIT DATE
+Format: YYYY-MM-DD
+-->
+<audit_date>2021-02-09</audit_date>
+
+<!--
+REFERENTIAL USED
+-->
+<referential>
+	<name>WCAG</name><!-- if it's an abbreviation, the document template must translate it to plain text -->
+	<version>2.1</version>
+	<level>AA</level>
+	<url>https://www.w3.org/Translations/WCAG20-fr/</url>
+</referential>
+
+<!--
+TECHNOLOGIES USED IN THE SITE
+-->
+<technologies>
+	<technology>Java</technology>
+	<technology>Kotlin</technology>
+	<technology>XML</technology>
+</technologies>
+
+<!--
+TESTS PERFORMED TO EVALUATE ACCESSIBILITY
+a test can have the type [auto|manual|functional|user]:
+* automatic testing
+* manual testing
+* functional testing
+* test done by a real user
+-->
+<tests>
+	<test type="auto">
+		<name>aXe</name>
+		<version>3.5.1</version>
+	</test>
+	<test type="manual">
+		<name>La va11ydette d'Orange</name>
+		<version></version>
+	</test>
+	<test type="manual">
+		<name>NVDA</name>
+		<version>2009.2</version>
+	</test>
+	<test type="user">
+		<name>Test utilisateur</name>
+		<version></version>
+	</test>
+</tests>
+
+<!--
+URLS
+This is the list of URLs that were tested
+This is CDATA-protected, please add properly formatted HTML.
+-->
+<urls>
+	<url>
+		<name>Nom de la page</name>
+		<location>undefined</location>
+	</url>
+</urls>
+<!--
+******************************************************
+END GENERAL DECLARATION INFORMATION
+******************************************************
+START SPECIFIC CONFORMITY NUMBERS
+******************************************************
+-->
+<!--
+USERS
+Number of real users that tested the pages
+and blocking points they found (if 0, the document will have to say “with no blocking points from a user's point of view”
+-->
+<users>2</users>
+<blocking_points>3</blocking_points>
+
+<!--
+RESULTS DETAILS
+-->
+<results>
+	<result type="a">
+		<criteria>30</criteria>
+		<ok>0</ok><!-- valid -->
+		<nok>2</nok><!-- not valid -->
+		<na>0</na><!-- not applicable -->
+		<conformity>0</conformity><!-- percentage, expressed as a number with no “%” sign -->
+	</result>
+
+	<result type="aa">
+		<criteria>20</criteria>
+		<ok>1</ok><!-- valid -->
+		<nok>0</nok><!-- not valid -->
+		<na>0</na><!-- not applicable -->
+		<conformity>100</conformity><!-- percentage, expressed as a number with no “%” sign -->
+	</result>
+
+	<result type="total">
+		<criteria>50</criteria>
+		<ok>1</ok><!-- valid -->
+		<nok>2</nok><!-- not valid -->
+		<na>0</na><!-- not applicable -->
+		<conformity>70</conformity><!-- percentage, expressed as a number with no “%” sign -->
+	</result>
+</results>
+
+<!--
+Pages results details
+-->
+<pages_results conformity="70">
+	<page name="Nom de la page">
+		<ok type="a">0</ok><!-- valid -->
+		<ok type="aa">1</ok><!-- valid -->
+		<nok type="a">2</nok> <!-- not valid -->
+		<nok type="aa">0</nok> <!-- not valid -->
+		<na type="a">3</na><!-- not applicable -->
+		<na type="aa">3</na><!-- not applicable -->
+		<conformity>33</conformity><!-- percentage, expressed as a number with no “%” sign -->
+</page>
+</pages_results>
+
+<!--
+Non conformity details
+-->
+<details>
+	<detail>		<title>1.3.1, Information et relations, Niveau A</title>		<description><![CDATA[]]></description>	</detail>	<detail>		<title>3.3.2, Étiquettes ou instructions, Niveau A</title>		<description><![CDATA[]]></description>	</detail></details>
+</declaration>

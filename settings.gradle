@@ -1,0 +1,3 @@
+include ':AccessibilityStatementLibrary'
+include ':app'
+rootProject.name = "AccessibilityStatement"
