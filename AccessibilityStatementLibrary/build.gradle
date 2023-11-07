@@ -1,8 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: project.file('../versions.gradle')
 
 android {
-    namespace "com.orange.accessibilitystatementlibrary"
+    if (project.android.hasProperty("namespace")) {
+        namespace "com.orange.accessibilitystatementlibrary"
+    }
 
     compileSdk 34
 
