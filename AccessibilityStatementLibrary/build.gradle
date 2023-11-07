@@ -1,7 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply from: project.file('../versions.gradle')
 
 android {
+    if (project.android.hasProperty("namespace")) {
+        namespace "com.orange.accessibilitystatementlibrary"
+    }
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -23,6 +28,15 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
