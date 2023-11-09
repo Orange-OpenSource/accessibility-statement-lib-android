@@ -24,6 +24,7 @@
 
 package com.orange.accessibilitystatementlibrary
 
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.content.res.TypedArray
@@ -31,7 +32,9 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.FileProvider
 import com.orange.accessibilitystatementlibrary.databinding.ViewStatementBinding
+import java.io.File
 
 class StatementView @JvmOverloads constructor(
     context: Context,
@@ -40,8 +43,44 @@ class StatementView @JvmOverloads constructor(
 ) :
     ConstraintLayout(context, attrs, defStyleAttr) {
 
+    companion object {
+        private const val FILE_PROVIDER_AUTHORITY = "com.orange.accessibilitystatementlibrary.fileprovider"
+    }
+
     var urlAccessibilityDeclaration: String? = null
-    lateinit var binding : ViewStatementBinding
+
+    /**
+     * The assets directory containing the accessibility statement.
+     *
+     * Displaying the accessibility statement from the assets also requires adding a `FileProvider` subclass in your app:
+     *
+     * ```
+     * class AccessibilityStatementFileProvider : FileProvider(R.xml.files_paths)
+     * ```
+     *
+     * And declare this provider in your app manifest with value `com.orange.accessibilitystatementlibrary.fileprovider` for the `android:authorities` attribute:
+     *
+     * ```
+     * <provider
+     *     android:name="com.myapp.AccessibilityStatementFileProvider"
+     *     android:authorities="com.orange.accessibilitystatementlibrary.fileprovider"
+     *     android:exported="false"
+     *     android:grantUriPermissions="true">
+     *     <meta-data
+     *         android:name="android.support.FILE_PROVIDER_PATHS"
+     *         android:resource="@xml/files_paths" />
+     * </provider>
+     * ```
+     */
+    var accessibilityStatementAssetsDirectory: String? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                copyAssetsToFilesDirectory(value, context)
+            }
+        }
+
+    lateinit var binding: ViewStatementBinding
 
     init {
         init(attrs)
@@ -62,11 +101,12 @@ class StatementView @JvmOverloads constructor(
             binding.declarantTextView.text = text
 
             binding.buttonSeeMore.setOnClickListener {
-                if (urlAccessibilityDeclaration != null) {
-                    val browserIntent =
-                        Intent(Intent.ACTION_VIEW, Uri.parse(urlAccessibilityDeclaration))
-                    context.startActivity(browserIntent)
+                val intent = when {
+                    urlAccessibilityDeclaration != null -> Intent(Intent.ACTION_VIEW, Uri.parse(urlAccessibilityDeclaration))
+                    accessibilityStatementAssetsDirectory != null -> getAccessibilityStatementAssetsIntent(context)
+                    else -> null
                 }
+                intent?.let { context.startActivity(it) }
             }
         } finally {
             attributes.recycle()
@@ -100,5 +140,59 @@ class StatementView @JvmOverloads constructor(
         binding.resultDetailTextView.text = context.getString(R.string.conformity_state, nameOfApplication, percentValue)
     }
 
+    private fun copyAssetsToFilesDirectory(assetsDirectory: String, context: Context) {
+        val filesDirPath = context.filesDir.absolutePath
 
+        // Create destination path
+        with(File("$filesDirPath/$assetsDirectory")) {
+            if (!exists()) {
+                mkdirs()
+            }
+        }
+
+        // Copy assets to destination
+        getAccessibilityStatementAssetsPaths(context).forEach { path ->
+            context.assets.open(path).use { inputSteam ->
+                val file = File(filesDirPath, path)
+                if (!file.exists()) {
+                    file.outputStream().use { outputStream ->
+                        inputSteam.copyTo(outputStream, 1024)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getAccessibilityStatementAssetsIntent(context: Context): Intent {
+        val uris = getAccessibilityStatementAssetsPaths(context).mapNotNull { path ->
+            val file = File(context.filesDir, path)
+            FileProvider.getUriForFile(context, FILE_PROVIDER_AUTHORITY, file)
+        }
+
+        val htmlURI = uris.firstOrNull { it.isHtmlFile }
+        // Add other files (css, images, etc...) to a clip data
+        var clipData: ClipData? = null
+        uris.filter { !it.isHtmlFile }
+            .forEach { uri ->
+                if (clipData == null) {
+                    clipData = ClipData.newRawUri("", uri)
+                } else {
+                    clipData?.addItem(ClipData.Item(uri))
+                }
+            }
+
+        return Intent(Intent.ACTION_VIEW, htmlURI).apply {
+            this.clipData = clipData
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+    }
+
+    private fun getAccessibilityStatementAssetsPaths(context: Context): List<String> {
+        return accessibilityStatementAssetsDirectory?.let { directory ->
+            context.assets.list(directory).orEmpty().map { "$directory/$it" }
+        }.orEmpty()
+    }
+
+    private val Uri.isHtmlFile: Boolean
+        get() = path?.endsWith(".html") == true
 }
