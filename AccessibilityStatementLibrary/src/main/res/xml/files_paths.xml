@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~
   ~ Accessibility-Statement-Library
@@ -23,10 +22,8 @@
   ~ under the License.
   -->
 
-<resources>
-    <declare-styleable name="DeclarationView">
-        <attr format="string" name="declarant" />
-        <attr format="string" name="details_url" />
-        <attr format="string" name="file_path" />
-    </declare-styleable>
-</resources>
+<paths>
+    <files-path
+        name="accessibility-statement"
+        path="accessibility-statement/" />
+</paths>
