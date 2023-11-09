@@ -23,5 +23,16 @@
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.orange.accessibilitystatementlibrary">
-    /
+
+    <application>
+        <provider
+            android:name="AccessibilityStatementFileProvider"
+            android:authorities="${applicationId}.accessibilitystatementfileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files_paths" />
+        </provider>
+    </application>
 </manifest>

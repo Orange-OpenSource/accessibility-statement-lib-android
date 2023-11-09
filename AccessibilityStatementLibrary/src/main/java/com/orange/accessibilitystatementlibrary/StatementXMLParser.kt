@@ -29,7 +29,7 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
 
-class StatementXMLParser(context: Context) {
+class StatementXMLParser(context: Context, private val filePath: String) {
 
     private val XML_DATE = "audit_date"
     private val XML_REFERENTIAL = "referential"
@@ -44,8 +44,6 @@ class StatementXMLParser(context: Context) {
     private val XML_TITLE = "title"
     private val XML_DETAILS = "details"
 
-    private val FILE_NAME = "accessibility_result.xml"
-
     private lateinit var parser: XmlPullParser
     private var mContext: Context
 
@@ -55,15 +53,19 @@ class StatementXMLParser(context: Context) {
         mContext = context
     }
 
-    fun getAccessibilityStatementFromXML(): AccessibilityStatement {
-        parseXML()
-        processParsing()
-        return accessibilityStatement
+    fun getAccessibilityStatementFromXML(): AccessibilityStatement? {
+        return try {
+            parseXML()
+            processParsing()
+            accessibilityStatement
+        } catch (_: Throwable) {
+            null
+        }
     }
 
     private fun parseXML() {
         val parserFactory = XmlPullParserFactory.newInstance()
-        val inputStream: InputStream = mContext.assets.open(FILE_NAME)
+        val inputStream: InputStream = mContext.assets.open(filePath)
 
         parser = parserFactory.newPullParser()
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
