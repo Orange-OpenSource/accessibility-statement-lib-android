@@ -26,7 +26,8 @@ package com.orange.accessibilitystatementlibrary
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class AccessibilityStatement {
     var referential: String = ""
@@ -43,11 +44,13 @@ class AccessibilityStatement {
         }
         val inputFormat = SimpleDateFormat(inputPattern)
         val outputFormat = SimpleDateFormat(outputPattern)
-        var inputDate: Date? = null
+        val inputDate: Date?
         var formattedDate: String? = null
         try {
-            inputDate = inputFormat.parse(date)
-            formattedDate = outputFormat.format(inputDate)
+            inputDate = date?.let { inputFormat.parse(it) }
+            if (inputDate != null) {
+                formattedDate = outputFormat.format(inputDate)
+            }
         } catch (e: ParseException) {
             e.printStackTrace()
         }

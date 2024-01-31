@@ -79,7 +79,7 @@ class StatementXMLParser(context: Context, private val filePath: String) {
         var eventType = parser.eventType
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
-            var eltName = ""
+            var eltName: String
 
             if (eventType == XmlPullParser.START_TAG) {
                 eltName = parser.name
@@ -111,7 +111,7 @@ class StatementXMLParser(context: Context, private val filePath: String) {
 
     private fun parseTechno() {
         val technology = parser.nextText()
-        if (accessibilityStatement.technologies == null || accessibilityStatement.technologies.length == 0) {
+        if (accessibilityStatement.technologies.length == 0) {
             accessibilityStatement.technologies = "$technology"
         } else {
             accessibilityStatement.technologies = accessibilityStatement.technologies + ", $technology"
